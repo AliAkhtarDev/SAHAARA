@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahara-Booking Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Please Check Your Details Before You Submit</h1>
+        <form id="bookingForm" class="formSubmit">
+            <input type="text" value="Driver Name: <%= driver.driverName %>" id="name" readonly>
+            <input type="text" value="Driver Phone: <%= driver.driverPhone %>" id="phone" readonly>
+            <input type="text" value="Vehicle Number: <%= driver.ambulanceNumber %>" id="vehicleNumber" readonly>
+            <input type="text" value="Vehicle Type: <%= driver.vehicleType %>" id="vehicleType" readonly>
+            <input type="text" value="Driver is associated with: <%= driver.organisation %>" id="organisation" readonly>
+            <input type="text" value="Driver Email: <%= driver.email %>" id="email" readonly>
+            <button type="submit" id="btn">Accept Booking</button>
+        </form>
+    </div>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+        const form = document.getElementById('bookingForm');
+        const socket = io(); // Initialize socket connection
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent form from submitting
+
+            // Extract the values
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const vehicleNumber = document.getElementById('vehicleNumber').value;
+            const vehicleType = document.getElementById('vehicleType').value;
+            const organisation = document.getElementById('organisation').value;
+            const email = document.getElementById('email').value;
+
+            // Emit the data to the server
+            socket.emit('sendDetails', {
+                name,
+                phone,
+                vehicleNumber,
+                vehicleType,
+                organisation,
+                email
+            });
+
+            socket.on('detailsSaved', () => {
+            window.location.href = "/sahara/home"; // Redirect after successful data submission
+        });
+        });
+
+       
+    </script>
+</body>
+</html>

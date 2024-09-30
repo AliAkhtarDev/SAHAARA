@@ -1,0 +1,11 @@
+1.support geo location in browser
+high accuracy
+no cashing
+timeout
+watch position cont.
+map coordinate set(0,0)
+openstratmap
+zoom level high
+create marker
+if marker for id exist update its position otherwise create a new marker
+when user is disconnect , remove marker

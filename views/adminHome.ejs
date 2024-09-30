@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahara-Admin Home</title>
+
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .PatientInfo,
+        .DriverInfo {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .PatientInfo:hover,
+        .DriverInfo:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Driver details styling */
+        .DriverInfo {
+            margin-bottom: 30px;
+        }
+
+        .driverDetail {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        .driverDetail strong {
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        /* Patient information styling */
+        .PatientInfo p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .PatientInfo strong {
+            font-weight: 600;
+        }
+
+        /* Form and button styling */
+        form {
+            text-align: right;
+            margin-top: 15px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn.accepted {
+            background-color: #6c757d;
+            cursor: default;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .PatientInfo,
+            .DriverInfo {
+                max-width: 90%;
+            }
+        }
+
+        /* Header Styling */
+        .header {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #007bff;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Admin Page Header -->
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <p>Manage ambulance bookings and patient details efficiently</p>
+    </div>
+
+    <!-- Driver Details Section -->
+    <div class="container">
+        <div class="DriverInfo">
+            <p class="driverDetail"><strong>Driver Name:</strong> <%= driver.driverName %></p>
+            <p class="driverDetail"><strong>Driver Phone:</strong> <%= driver.driverPhone %></p>
+            <p class="driverDetail"><strong>Vehicle Number:</strong> <%= driver.ambulanceNumber %></p>
+            <p class="driverDetail"><strong>Vehicle Type:</strong> <%= driver.vehicleType %></p>
+            <p class="driverDetail"><strong>Organisation:</strong> <%= driver.organisation %></p>
+            <p class="driverDetail"><strong>Email:</strong> <%= driver.email %></p>
+        </div>
+    </div>
+
+    <!-- Patient Information Section -->
+    <div class="container">
+        <% users.forEach(user => { %>
+        <div class="PatientInfo" id="patient">
+            <p><strong>Patient Name:</strong> <%= user.name %></p>
+            <p><strong>Patient Location:</strong> <%= user.address %></p>
+            <p><strong>Emergency Type:</strong> <%= user.emergencyType %></p>
+            <p><strong>Additional Message:</strong> <%= user.additionalDetails %></p>
+
+            <form action="/sahara/booking/<%= user._id %>/<%=driver._id%>" method="get">
+                <button type="submit" class="btn">Accept</button>
+            </form>
+        </div>
+        <% }); %>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

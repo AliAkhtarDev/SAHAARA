@@ -1,0 +1,230 @@
+const express = require("express");
+const socketio = require("socket.io");
+const http = require("http");
+const app = express();
+const path = require("path");
+const mongoose = require('mongoose');
+const User = require("./models/users.js");
+const Booking = require("./models/booking.js");
+const Admin = require("./models/Admin.js");
+
+
+
+
+main().then(()=>{
+    console.log("Connected to Database sahara");
+})
+.catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect('mongodb://127.0.0.1:27017/sahara');
+
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+}
+
+const server = http.createServer(app); //creating server for socket
+const io = socketio(server) ;
+
+
+
+
+app.set("view engine","ejs")
+app.set("views",path.join(__dirname,"/views"));
+
+app.use(express.static(path.join(__dirname,"public")));
+app.use(express.urlencoded({extended:true}));
+
+io.on("connection",function(socket){
+
+    socket.on("send-location",function(data){  //backend s location recieve kr kai frontend m pass kr rhai hai
+        io.emit("receive-location",
+            { //jitne log connect honge ussai saare log dekhainge
+            id:socket.id,
+            type:data.type ,
+            ...data,   })  ;
+     
+     
+          
+        });
+
+        socket.on("disconnect",function(){
+            io.emit("user-disconnected",socket.id);
+        })  
+    
+    console.log("connected");
+
+
+
+   
+    })
+
+    
+
+    
+
+
+
+    // ---Home Route----
+    app.get("/sahara/home",async(req,res)=>{
+
+
+        res.render("index.ejs");
+    })
+
+    // ----Login Route ---
+
+app.get("/sahara",(req,res)=>{
+    res.render("login.ejs");
+})
+
+
+
+//--signup Route
+app.get("/sahara/signup",(req,res)=>{
+    res.render("signup.ejs");
+})
+
+app.post("/sahara/signup", async(req,res)=>{
+    let {username,email,password} = req.body;
+    const newUser = new User({
+        username:username,
+        email:email,
+        password:password
+    })
+    await newUser.save();
+    console.log("User registered Successfully!");
+    res.redirect("/sahara/home");
+
+})
+
+//Booking Confirmation
+
+app.get("/sahara/booking/:userId/:driverId",async(req,res)=>{
+   let {userId,driverId} = req.params;
+   console.log(userId);
+    let driver = await Admin.findById(driverId);
+    let user = await Booking.findById(userId);
+    console.log(user.name);
+
+   console.log(driver.driverName);
+   res.render("confirmBooking.ejs",{user,driver});
+
+
+    
+
+})
+app.post("/sahara/booking/:userId/:driverId",(req,res)=>{
+    res.redirect("/sahara/home")
+})
+    
+
+
+
+
+
+// ---Booking Route ---
+
+app.get("/sahara/booking",(req,res)=>{
+    res.render("booking.ejs");
+})
+
+app.post("/sahara/booking",async(req,res)=>{
+    let {name,phoneNumber,address,emergencyType,additionalDetails} = req.body;
+    const newBooking = new Booking({
+        name:name,
+        phoneNumber:phoneNumber,
+        address:address,
+        emergencyType:emergencyType,
+        additionalDetails:additionalDetails
+
+    })
+    await newBooking.save();
+    console.log("Booking Confirmed");
+    res.redirect("/sahara/home");
+
+
+})
+
+// Admin Route
+app.get("/sahara/admin",(req,res)=>{
+    res.render("adminLogin.ejs");
+})
+
+
+
+app.get("/sahara/admin/home/:id",async(req,res)=>{
+
+    let{id} = req.params;
+
+     let driver = await Admin.findOne({_id:id});
+
+     if(driver){
+
+        
+     const users = await Booking.find({});
+
+     res.render("adminHome.ejs",{users,driver});
+
+
+     }
+     else{
+        console.log("driver does not exist");
+     }
+
+     app.post("/sahara/admin/home/:id",async(req,res)=>{
+        res.redirect("/sahara/home");
+     })
+
+
+  
+
+
+
+})
+
+app.get("/sahara/adminRegistration",(req,res)=>{
+    res.render("adminRegistration.ejs");
+})
+app.post("/sahara/adminRegistration",async(req,res)=>{
+
+    const {driverName,driverPhone,ambulanceNumber,vehicleType,organisation,email,password} = req.body;
+
+
+    const newAmbulance = new Admin({
+        driverName:driverName
+        ,driverPhone:driverPhone
+        ,ambulanceNumber:ambulanceNumber
+        ,vehicleType:vehicleType
+        ,organisation:organisation
+        ,email:email
+        ,password:password
+
+
+    })
+     await newAmbulance.save();
+
+     let driver = await Admin.findOne({driverPhone:driverPhone});
+     if(driver){
+        res.redirect(`/sahara/admin/home/${driver._id}`);
+
+     }
+     else{
+        console.log("driver does not exist");
+     }
+
+  
+
+   
+
+    
+})
+
+
+
+
+
+
+
+server.listen(8080,()=>{
+    console.log("app is listening on port 8080");
+})

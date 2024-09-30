@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Registration</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .toggle-link {
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Admin Registration Form -->
+    <div class="register-container" id="registerForm">
+      <h1>Admin Registration</h1>
+      <form action="/sahara/adminRegistration" method="POST">
+        <!-- Driver Name -->
+        <div class="form-group">
+          <label for="driverName">Driver Name</label>
+          <input type="text" class="form-control" id="driverName" name="driverName" required placeholder="Enter Driver Name">
+        </div>
+
+        <!-- Driver Phone Number -->
+        <div class="form-group">
+          <label for="driverPhone">Driver Phone Number</label>
+          <input type="number" class="form-control" id="driverPhone" name="driverPhone" required placeholder="Enter Phone Number">
+        </div>
+
+        <!-- Ambulance Number -->
+        <div class="form-group">
+          <label for="ambulanceNumber">Ambulance Number</label>
+          <input type="text" class="form-control" id="ambulanceNumber" name="ambulanceNumber" required placeholder="Enter Ambulance Number">
+        </div>
+
+        <!-- Vehicle Type -->
+        <div class="form-group">
+          <label for="vehicleType">Ambulance Type</label>
+          <input type="text" class="form-control" id="vehicleType" name="vehicleType" required placeholder="Enter Ambulance Type">
+        </div>
+
+        <!-- Organisation -->
+        <div class="form-group">
+          <label for="organisation">Your Organisation</label>
+          <input type="text" class="form-control" id="organisation" name="organisation" required placeholder="e.g., Apollo Multispeciality Hospitals">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="Enter Email">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" required minlength="8" placeholder="Enter Password">
+          <small class="form-text text-muted">
+            Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.
+          </small>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required placeholder="Confirm Your Password">
+        </div>
+
+        <!-- Register Button -->
+        <button type="submit" class="btn btn-success btn-block">Register</button>
+      </form>
+
+      <p class="text-center mt-3">Already have an account? <span class="toggle-link" id="showLogin">Login Here</span></p>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Custom Script for toggling between login and register -->
+  <script>
+    document.getElementById('showLogin').addEventListener('click', function() {
+      // Redirect to login page
+      window.location.href = "/sahara/admin";
+    });
+  </script>
+
+</body>
+</html>
